@@ -169,7 +169,7 @@ public class OnDemandJob extends AbstractComponent {
 			getShiftDays.get(i).click();
 
 		}
-		driver.findElement(By.xpath("//span[text()='Save']")).click();
+//		driver.findElement(By.xpath("//span[text()='Save']")).click();
 
 	}
 
