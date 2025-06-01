@@ -170,6 +170,7 @@ public class OnDemandJob extends AbstractComponent {
 
 		}
 		System.out.println("Testing");
+		System.out.println("Test");
 		driver.findElement(By.xpath("//span[text()='Save']")).click();
 
 	}
