@@ -60,7 +60,6 @@ public class OnDemandJob extends AbstractComponent {
 		String award = prop.getProperty("award");
 		String position = prop.getProperty("position");
 		String designation = prop.getProperty("designation");
-		;
 		String quantity = prop.getProperty("quantity");
 		String fromYear = prop.getProperty("fromYear");
 		String fromMonth = prop.getProperty("fromMonth");
@@ -77,8 +76,12 @@ public class OnDemandJob extends AbstractComponent {
 		String monthToXpath = ".date-to .ezeas-picker-cell-inner";
 		String nextYearToBtnXpath = ".date-to .ezeas-picker-header-super-next-btn";
 		waitForWebElementToAppear(ezeasApp);
-		driver.navigate().to("https://uat.ezeas.com/app/jobs");
+		driver.findElement(By.xpath("//div[text()='Jobs']")).click();
+//		driver.navigate().to("https://uat.ezeas.com/app/jobs");
 		waitForWebElementToAppear(addJobBtn);
+		
+//		driver.findElement(By.cssSelector("div[class*='SDmD']")).click();		
+		
 		addJobBtn.click();
 		waitForWebElementToAppear(selectOnDemand);
 		selectOnDemand.click();
@@ -117,15 +120,19 @@ public class OnDemandJob extends AbstractComponent {
 		}
 //		Thread.sleep(1000);
 		// Select Position
-
+		
 		while (true) {
+			
+			WebElement elt = null;
 			List<WebElement> positions = driver
 					.findElements(By.xpath("//span[contains(@class,'content-wrapper-close')]//span"));
 			boolean positionFound = false;
 			for (WebElement positionElement : positions) {
 				String expectedPosition = positionElement.getText();
 				if (expectedPosition.equals(position)) {
+					elt = driver.findElement(with(By.tagName("span")).toLeftOf(positionElement));
 					driver.findElement(with(By.tagName("span")).toLeftOf(positionElement)).click();
+					driver.findElement(By.xpath("//span[text()='"+designation+"']")).click();
 					positionFound = true;
 					break;
 				}
@@ -133,15 +140,27 @@ public class OnDemandJob extends AbstractComponent {
 			if (positionFound) {
 				break;
 			} else {
+				
+//				WebElement hiddenElement = driver.findElement(By.cssSelector(".ezeas-select-tree-list-holder-inner"));
+//				WebElement pstn = hiddenElement.findElement(By.xpath("//span[text()='"+position+"']"));
+				JavascriptExecutor js = (JavascriptExecutor) driver;
+				js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+				driver.findElement(By.xpath("//span[text()='" + position + "']")).click();
 
-				Actions actions = new Actions(driver);
-				actions.moveToElement(driver.findElement(By.xpath("//span[text()='"+position+"']"))).build()
-				.perform();
+				// Can Uncomment
+//				Actions actions = new Actions(driver);
+//				actions.moveToElement(driver.findElement(By.xpath("//span[text()='"+position+"']"))).build()
+//				.perform();
+
+				// Can't Uncomment
 //				WebElement sourceElement = driver.findElement(By.cssSelector("[class*='scrollbar-thumb']"));
 //				actions.clickAndHold(sourceElement).moveByOffset(4, 10).release().perform();
-				waitForWebElementToAppear(driver.findElement(By.xpath("//span[text()='" + position + "']")));
-				driver.findElement(By.xpath("//span[text()='" + position + "']")).click();
+
+				// Can Uncomment
+//				waitForWebElementToAppear(driver.findElement(By.xpath("//span[text()='" + position + "']")));
+//				driver.findElement(By.xpath("//span[text()='" + position + "']")).click();
 				break;
+
 			}
 		}
 		waitForWebElementToDisappear(descriptionElement);
@@ -167,11 +186,20 @@ public class OnDemandJob extends AbstractComponent {
 		List<WebElement> getShiftDays = driver.findElements(By.xpath("//td[@role='button']"));
 		for (int i = 0; i < getShiftDays.size(); i++) {
 			getShiftDays.get(i).click();
-
 		}
-		System.out.println("Testing");
 		driver.findElement(By.xpath("//span[text()='Save']")).click();
-
+		waitForWebElementToAppear(driver.findElement(By.className("ezeas-table-tbody")));
+		Thread.sleep(5000);
+		driver.findElement(By.cssSelector("div[class*='SDmD']")).click();
+		waitForWebElementToAppear(driver.findElement(By.xpath("//span[text()='View Estimate']")));
+		driver.findElement(By.xpath("//span[text()='View Estimate']")).click();
+		driver.findElement(By.xpath("//span[text()='Accept Estimate']")).click();
+		driver.findElement(By.xpath("//span[text()='Publish']")).click();
+		driver.findElement(By.xpath("//div[text()='Candidates']")).click();
+		waitForWebElementToAppear(driver.findElement(By.xpath("//span[text()='Name']")));
+		driver.findElement(By.xpath("//input[@aria-label='Select all']")).click();
+		driver.findElement(By.cssSelector("i[class*='invite']")).click();
+		driver.findElement(By.xpath("//span[text()='Send Invitation']")).click();
 	}
 
 }

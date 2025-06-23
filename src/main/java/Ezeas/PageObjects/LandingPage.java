@@ -51,7 +51,9 @@ public class LandingPage extends AbstractComponent {
 
 	public void goTo() throws InterruptedException {
 //		driver.get("https://uat.ezeas.com/?_vercel_share=HMLdENdv4FmQbd5QMkYBzRrWtIGj5Hx8");
-		driver.get("https://uat.ezeas.com/?_vercel_share=AHBOfYR1KhHe3kswlFO49kpBUEPfEKJQ");
+//		driver.get("https://uat.ezeas.com/?_vercel_share=AHBOfYR1KhHe3kswlFO49kpBUEPfEKJQ");
+		driver.get("https://stg.ezeas.com/?_vercel_share=opfKH8a1EmpU8TOmyptXLYzEMTffqEds");
+		
 		waitForWebElementToAppear(acceptCookies);
 		acceptCookies.click();
 	}
