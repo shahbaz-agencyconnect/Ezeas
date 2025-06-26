@@ -3,12 +3,12 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="Ezeas.Tests.ResetPassword">
+      <class name="Ezeas.Tests.DemoAddDemandJob">
         <methods>
+          <include name="addDemandJob"/>
           <include name="launchApplication"/>
-          <include name="requestResetPassword"/>
         </methods>
-      </class> <!-- Ezeas.Tests.ResetPassword -->
+      </class> <!-- Ezeas.Tests.DemoAddDemandJob -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

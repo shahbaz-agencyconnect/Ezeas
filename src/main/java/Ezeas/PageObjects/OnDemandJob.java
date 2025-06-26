@@ -38,7 +38,7 @@ public class OnDemandJob extends AbstractComponent {
 	@FindBy(xpath = "//i[contains(@class,'plus-small')]")
 	WebElement addJobBtn;
 
-	@FindBy(xpath = "//div[text()='On Demand']")
+	@FindBy(css = ".Jobs_job_type_card__w8g0N")
 	WebElement selectOnDemand;
 
 	@FindBy(id = "worksiteId")
@@ -79,9 +79,9 @@ public class OnDemandJob extends AbstractComponent {
 		driver.findElement(By.xpath("//div[text()='Jobs']")).click();
 //		driver.navigate().to("https://uat.ezeas.com/app/jobs");
 		waitForWebElementToAppear(addJobBtn);
-		
+
 //		driver.findElement(By.cssSelector("div[class*='SDmD']")).click();		
-		
+
 		addJobBtn.click();
 		waitForWebElementToAppear(selectOnDemand);
 		selectOnDemand.click();
@@ -120,54 +120,61 @@ public class OnDemandJob extends AbstractComponent {
 		}
 //		Thread.sleep(1000);
 		// Select Position
-		
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+
 		while (true) {
-			
-			WebElement elt = null;
-			List<WebElement> positions = driver
-					.findElements(By.xpath("//span[contains(@class,'content-wrapper-close')]//span"));
+			List<WebElement> positions = driver.findElements(By.cssSelector(".ezeas-select-tree-title"));
 			boolean positionFound = false;
 			for (WebElement positionElement : positions) {
 				String expectedPosition = positionElement.getText();
 				if (expectedPosition.equals(position)) {
-					elt = driver.findElement(with(By.tagName("span")).toLeftOf(positionElement));
-					driver.findElement(with(By.tagName("span")).toLeftOf(positionElement)).click();
-					driver.findElement(By.xpath("//span[text()='"+designation+"']")).click();
-					positionFound = true;
-					break;
+					WebElement selectPosition = driver.findElement(with(By.tagName("span")).toLeftOf(positionElement));
+					selectPosition.click();
+					while (true) {
+						boolean designationFound = false;
+						List<WebElement> designations = driver.findElements(By.cssSelector(".ezeas-select-tree-title"));
+						for (WebElement designationElement : designations) {
+							String design = designationElement.getText();
+							if (design.equals(designation)) {
+								driver.findElement(By.xpath("//span[@title='" + designation + "']")).click();
+								designationFound = true;
+								break;
+							}
+						}
+						if (designationFound) {
+							break;
+						} 
+						else {
+							try {
+								WebElement targetElementLocator2 = driver
+										.findElement(By.xpath("(//span[@class='ezeas-select-tree-title'])[10]"));
+								js.executeScript("arguments[0].scrollIntoView(true);", targetElementLocator2);
+
+							} catch (Exception e) {
+								// TODO: handle exception
+							}
+						}
+				}
 				}
 			}
 			if (positionFound) {
 				break;
 			} else {
-				
-//				WebElement hiddenElement = driver.findElement(By.cssSelector(".ezeas-select-tree-list-holder-inner"));
-//				WebElement pstn = hiddenElement.findElement(By.xpath("//span[text()='"+position+"']"));
-				JavascriptExecutor js = (JavascriptExecutor) driver;
-				js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-				driver.findElement(By.xpath("//span[text()='" + position + "']")).click();
-
-				// Can Uncomment
-//				Actions actions = new Actions(driver);
-//				actions.moveToElement(driver.findElement(By.xpath("//span[text()='"+position+"']"))).build()
-//				.perform();
-
-				// Can't Uncomment
-//				WebElement sourceElement = driver.findElement(By.cssSelector("[class*='scrollbar-thumb']"));
-//				actions.clickAndHold(sourceElement).moveByOffset(4, 10).release().perform();
-
-				// Can Uncomment
-//				waitForWebElementToAppear(driver.findElement(By.xpath("//span[text()='" + position + "']")));
-//				driver.findElement(By.xpath("//span[text()='" + position + "']")).click();
-				break;
-
+				try {
+					WebElement targetElementLocator1 = driver.findElement(
+							By.xpath("(//div[contains(@class,'ezeas-select-tree-treenode-switcher-close')])[9]"));
+					js.executeScript("arguments[0].scrollIntoView(true);", targetElementLocator1);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 		}
+
 		waitForWebElementToDisappear(descriptionElement);
 //		Thread.sleep(2000);
 
 		WebElement quantityElement = driver.findElement(By.cssSelector("[title='Inductions']"));
-		JavascriptExecutor js = (JavascriptExecutor) driver;
+//		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("arguments[0].scrollIntoView();", quantityElement);
 		waitForWebElementToAppear(quantityElement);
 		driver.findElement(By.id("quantity")).click();
